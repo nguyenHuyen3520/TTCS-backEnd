@@ -1,0 +1,30 @@
+POST http://localhost:4000/api/login
+Content-Type: application/json
+
+{
+    "email": "testJWT@gmail.com",
+    "password": "huyen123"
+}
+###
+POST http://localhost:4000/api/signup
+Content-Type: application/json
+
+{
+    "userName": "testJWT",
+    "email": "test2912@gmail.com",
+    "password": "29122021",
+    "phone": "0123456789"
+}
+
+###
+GET http://localhost:4000/api/profile 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxY2I1NjY4MmY5MTBmNGM1Yzg1YmU2NCIsInVzZXJOYW1lIjoidGVzdEpXVCIsImVtYWlsIjoidGVzdEpXVEBnbWFpbC5jb20iLCJ0eXBlVXNlciI6ImFkbWluIiwiaWF0IjoxNjQxMjEwNDM0fQ.TbJT0dH-QrDdgueMQgnCMT5sLR3nVdTEPRCT_mm2Rqk
+
+
+###
+POST http://localhost:4000/api/admin/create-typeCourse
+Content-Type: application/json
+
+{
+    "nameType": "UI Design"
+}

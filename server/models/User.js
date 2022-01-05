@@ -2,29 +2,26 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
-    name: {
+    userName: {
         type: String 
     },
     email: {
         type: String
     },
-    address: {
+    phone: {
         type: String
     },
     password: {
         type: String
     },
-    role:{
-        type: Number,
-        enum: [1,2,3]
+    typeUser: {
+        type: String,        
+        default: 'user'
     },
-    seniority: {
-        type: Boolean,        
-    },
-    salary:{
-        type: Number
+    image: {
+        type: String,
+        default: "https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-11.jpg"
     }
-
 })
 
 module.exports = mongoose.model('User', UserSchema)
