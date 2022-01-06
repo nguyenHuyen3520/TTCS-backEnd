@@ -86,7 +86,7 @@ const createTypeCourse = (req, res) => {
                 nameType: req.body.nameType,
             });
             return newTypeCourse.save().then((result) => {
-                return res.status(200).json({
+                return res.status(201).json({
                     success: true,
                     message: 'New type course created successfully',
                     Course: result,
@@ -130,22 +130,55 @@ const createUser = async (req, res) => {
             });
             const result = await user.save();
             return result;
-            // return user.save()
-            // .then((newUser) => {
-            //     return res.status(200).json({
-            //         success: true,
-            //         message: 'New user created successfully',
-            //         User: newUser,
-            //     });
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            //     res.status(500).json({
-            //         success: false,
-            //         message: 'Server error. Please try again.',
-            //         error: error.message,
-            //     });
-            // });
         })
 }
-module.exports = { getListUser, createCourse, createTypeCourse, getListCourse, getTypeCourses, createUser };
+
+const deleteUser = async (req, res) => {
+    const userFind = await User.findById(req.query.id);
+    return userFind.delete().then(() => {
+        return res.status(200).json({
+            success: true,
+            message: 'Delete user successfully',
+        })
+    }).catch((err) => {
+        return res.status(400).json({
+            success: false,
+            message: err,
+        });
+    })
+}
+
+const AdminUpdateUser = async (req, res) => {
+    // User.findOne({ email: req.body.email }).then(user => {
+    //     if (user) {            
+    //         res.status(200).json({
+    //             success: false,
+    //             err: 'Email da ton tai',
+    //         });
+    //     }
+    //     return bcrypt.hash(req.body.password, 12)
+    // })
+    //     .then(async (hashedPassword) => {
+    //         const user = new User({
+    //             userName: req.body.userName,
+    //             password: hashedPassword,
+    //             phone: req.body.phone,
+    //             typeUser: req.body.typeUser,
+    //             email: req.body.email,
+    //         });
+    //         const result = await User.updateOne({_id: req.body.id}, {$set: user});
+    //         return result;
+    //     })
+    //     .catch(
+    //         (error) => {
+    //             console.log("============================")
+    //             console.log("sai roi")
+    //             return res.status(400).json({
+    //                 error: error,
+    //                 message: "sai roi"
+    //             });
+    //         }
+    //     );
+
+}
+module.exports = { getListUser, createCourse, createTypeCourse, getListCourse, getTypeCourses, createUser, deleteUser, AdminUpdateUser };
