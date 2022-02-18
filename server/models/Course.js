@@ -9,10 +9,11 @@ const CourseSchema = new Schema({
         type: String
     },
     createAt: { type: Date, default: Date.now },
-    schedule: {
-        type: [Date],
-        default: []
-    },
+    schedule: [{
+        title: String,
+        startDate: Date,
+        endDate: Date
+    }],
     price: {
         type: Number
     },
@@ -20,9 +21,12 @@ const CourseSchema = new Schema({
         type: [Date],
         default: []
     },
+    teacher_id: {
+        type: Schema.Types.ObjectId
+    },
     typeCourse: { type: String, default: "Full-Stack" },
-    image:{
-        type:String, default: "https://www.google.com/url?sa=i&url=https%3A%2F%2Ft3h.com.vn%2Ftin-tuc%2Fjsx-trong-reactjs&psig=AOvVaw2M3WmV7tsrUBIiJIwrzZIf&ust=1641311133564000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPipn8v2lfUCFQAAAAAdAAAAABAD"
+    image: {
+        type: String, default: "https://lh4.ggpht.com/-PtwFBckvv78/V3aBB39xD9I/AAAAAAAAHFA/EXKKalIB8IkvyJjUzGrDVQCzLMs5Alx9QCLcB/s1600/anh-blogspot-khong-hien-thi.png"
     }
 })
 

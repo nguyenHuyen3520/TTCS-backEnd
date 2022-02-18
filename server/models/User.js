@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
     userName: {
-        type: String 
+        type: String
     },
     email: {
         type: String
@@ -15,12 +15,15 @@ const UserSchema = new Schema({
         type: String
     },
     typeUser: {
-        type: String,        
-        default: 'user'
+        type: String,
+        default: 'hoc_vien'
     },
     image: {
         type: String,
         default: "https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-11.jpg"
+    },
+    uid: {
+        type: String
     }
 })
 

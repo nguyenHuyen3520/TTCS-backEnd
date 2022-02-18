@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const express = require('express');
 const app = express();
+const http = require("http");
 const mainRoutes = require("./server/routes/main");
 var cors = require('cors');
-
+const server = http.createServer(app);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
@@ -24,6 +25,13 @@ const connectDB = async () => {
         process.exit(1)
     }
 }
+const io = (module.exports.io = require('socket.io')(server, {
+    cors: {
+        origin: '*',
+    }
+}));
+const socketManager = require("./server/meet/socketManager");
+io.on("connection", socketManager);
 connectDB()
 const port = 4000;
 

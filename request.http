@@ -28,3 +28,132 @@ Content-Type: application/json
 {
     "nameType": "UI Design"
 }
+###
+POST http://localhost:4000/api/create-detailCourse
+Content-Type: application/json
+
+{
+    "Course_id" : "61d31a638d4d4c174c081c1f",
+    "Content" : [ 
+        "Hiểu về khái niệm SPA/MPA", 
+        "Hiểu cách ReactJS hoạt động", 
+        "Biết cách tối ưu hiệu năng ứng dụng", 
+        "Hiểu rõ ràng Redux workflow", 
+        "Biết sử dụng redux-thunk middleware", 
+        "Triển khai dự án React ra Internet", 
+        "Hiểu về khái niệm hooks", 
+        "Hiểu về function/class component", 
+        "Thành thạo làm việc với RESTful API"
+    ],
+    "Requirements" : [ 
+        "Hiểu biết về mô hình Client-Server", 
+        "Phân biệt rõ ràng được Front-end & Back-end", 
+        "Nắm chắc HTML, CSS, đã có sản phẩm tự tay làm", 
+        "Nắm chắc Javascript cơ bản và nâng cao"
+    ]
+}
+
+###
+POST http://localhost:4000/api/admin/create-course
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxY2I1NjY4MmY5MTBmNGM1Yzg1YmU2NCIsInVzZXJOYW1lIjoiQWRtaW4iLCJlbWFpbCI6InRlc3RKV1RAZ21haWwuY29tIiwidHlwZVVzZXIiOiJhZG1pbiIsImlhdCI6MTY0MTkyMDY1MX0.5elUDbRY6P-A8v81UkDeR9PETY0C45KgcOePXvQIN_Q
+
+{
+    "schedule" : [
+            {
+                "title": "Reactjs",
+                "startDate": "2022-01-02T18:00",
+                "endDate": "2022-01-02T21:00",
+            },
+            {
+                "title": "Reactjs",
+               "startDate": "2022-01-09T18:00",
+                "endDate": "2022-01-09T21:00",
+            },
+            {
+                "title": "Reactjs",
+               "startDate": "2022-01-16T18:00",
+                "endDate": "2022-01-16T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-01-23T18:00",
+                "endDate": "2022-01-23T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-01-30T18:00",
+                "endDate": "2022-01-30T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-02-06T18:00",
+                "endDate": "2022-02-06T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-02-13T18:00",
+                "endDate": "2022-02-13T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-02-20T18:00",
+                "endDate": "2022-02-20T21:00",
+            },
+        ],
+    "learnedArray" : [],
+    "typeCourse" : "Full-Stack",
+    "image" : "https://cdn.fullstack.edu.vn/f8-production/banners/Banner_web_ReactJS.png",
+    "name" : "Reactjs",
+    "descriptions" : "Khóa học ReactJS từ cơ bản tới nâng cao, kết quả của khóa học này là bạn có thể làm hầu hết các dự án thường gặp với ReactJS. Cuối khóa học này bạn sẽ sở hữu một dự án giống Tiktok.com, bạn có thể tự tin đi xin việc khi nắm chắc các kiến thức được chia sẻ trong khóa học này.",
+    "price" : 3000000,
+}
+
+###
+POST http://localhost:4000/api/create-schedule
+Content-Type: application/json
+
+{
+        "course_id": "61d31a638d4d4c174c081c1f",
+        "schedule" : [
+            {
+                "title": "Reactjs",
+                "startDate": "2022-01-02T18:00",
+                "endDate": "2022-01-02T21:00",
+            },
+            {
+                "title": "Reactjs",
+               "startDate": "2022-01-09T18:00",
+                "endDate": "2022-01-09T21:00",
+            },
+            {
+                "title": "Reactjs",
+               "startDate": "2022-01-16T18:00",
+                "endDate": "2022-01-16T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-01-23T18:00",
+                "endDate": "2022-01-23T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-01-30T18:00",
+                "endDate": "2022-01-30T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-02-06T18:00",
+                "endDate": "2022-02-06T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-02-13T18:00",
+                "endDate": "2022-02-13T21:00",
+            },
+            {
+                "title": "Reactjs",
+                "startDate": "2022-02-20T18:00",
+                "endDate": "2022-02-20T21:00",
+            },
+        ]
+}

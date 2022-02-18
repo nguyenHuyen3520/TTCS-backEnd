@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const getAllUser = (req, res) => User.find().then((data) => {
-    console.log("data: ", data);
     return res.status(200).json({
         success: true,
         message: "Lay thanh cong danh sach",
@@ -19,75 +18,120 @@ const getAllUser = (req, res) => User.find().then((data) => {
     });
 });
 
-const deleteUser = (req, res) => User.findByIdAndDelete(req.params.id).then((result)=> {
-    console.log(result);
+const deleteUser = (req, res) => User.findByIdAndDelete(req.params.id).then((result) => {
+    return res.status(200).json({
+        message: "User deleted successfully"
+    })
 });
 
 const signupUser = async (req, res) => {
-    console.log("data", req.body);
-    User.findOne({ email: req.body.email }).then(user => {
+    const findUser = await User.findOne({ email: req.body.email });
+    if (findUser) {
+        console.log("use da ton tai")
+        return res.status(204).json({
+            success: false,
+            message: 'Tài khoản đã tồn tại!',
+            data: req.body
+        })
+    } else {
+        const hashedPassword = await bcrypt.hash(req.body.password, 12);
+        const user = await new User({
+            userName: req.body.userName,
+            password: hashedPassword,
+            phone: req.body.phone,
+            typeUser: req.body.typeUser,
+            email: req.body.email,
+        }).save();
+        console.log("user", user)
+        return res.status(200).json({
+            success: true,
+            message: 'Tài khoản đã tạo thành công!',
+            data: req.body
+        })
+    }
+};
+
+const loginUser = async (req, res) => {
+    if (req.body.isGoogle) {
+        const user = await User.findOne({ email: req.body.email });
         if (user) {
-            res.status(500).json({
-                success: false,
-                message: 'User da ton tai',                
+            const payload = {
+                id: user.id,
+                userName: user.userName,
+                email: user.email,
+                typeUser: user.typeUser,
+                isGoogle: true,
+            }
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+            return res.status(200).json({
+                accessToken: accessToken,
+                success: true,
+                needCreate: true,
+                isGoogle: true,
+            });
+        } else {
+            console.log("tao user moi")
+            const newUser = await new User({
+                userName: req.body.userName,
+                email: req.body.email,
+                image: req.body.image
+            }).save();
+            console.log("user moi duoc tao la:", await User.findOne({ email: req.body.email }))
+            const payload = {
+                id: newUser.id,
+                userName: newUser.userName,
+                email: newUser.email,
+                typeUser: newUser.typeUser,
+                isGoogle: true,
+            }
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+            return res.status(200).json({
+                accessToken: accessToken,
+                success: true,
+                isGoogle: true,
             });
         }
-        return bcrypt.hash(req.body.password, 12)
-    }).
-        then((hashedPassword) => {
-            const user = new User({
-                userName: req.body.userName,
-                password: hashedPassword,
-                phone: req.body.phone,
-                typeUser: req.body.typeUser,
-                email: req.body.email,
-            });
-            return user.save()
-                .then((newUser) => {
+    } else {
+        User.findOne({ email: req.body.email }).then((user) => {
+            bcrypt.compare(req.body.password, user.password).then((result) => {
+                if (result) {
+                    console.log("ok ")
+                    const payload = {
+                        id: user.id,
+                        userName: user.userName,
+                        email: user.email,
+                        typeUser: user.typeUser
+                    }
+                    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
                     return res.status(200).json({
+                        accessToken: accessToken,
                         success: true,
-                        message: 'New user created successfully',
-                        User: newUser,
+                        image: user.image,
+                        isGoogle: false,
                     });
-                })
-                .catch((error) => {
-                    console.log(error);
-                    res.status(500).json({
+                } else {
+                    console.log("mat khau sai roi")
+                    return res.status(202).json({
                         success: false,
-                        message: 'Server error. Please try again.',
-                        error: error.message,
+                        message: 'Mật khẩu không đúng!',
+                        type: 'password'
                     });
-                });
-        })
+                }
+            })
+        }).catch((err) => {
+            return res.status(202).json({
+                success: false,
+                message: 'Tài khoản không tồn tại!',
+                type: 'email'
+            })
+        });
+    }
+
 };
 
-const loginUser = (req, res) => {
-    User.find({ email: req.body.email }).then((user) => {        
-        bcrypt.compare(req.body.password,user[0].password).then((result) => {
-            if (result) {
-                const payload = {
-                    id: user[0].id,
-                    userName: user[0].userName,
-                    email: user[0].email,
-                    typeUser: user[0].typeUser
-                }                
-                const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
-                return res.status(200).json({
-                    accessToken: accessToken
-                });
-            } else {
-                return res.status(500).json({
-                    success: false,
-                    message: 'mat khau sai.',                    
-                });
-            }
-        })
-    });
-};
-
-const getProfile = (req, res)=>{
+const getProfile = (req, res) => {
     console.log(req.decode);
-    return  res.status(200).json({user: req.decode});
+    return res.status(200).json({ user: req.decode });
 }
 
 
