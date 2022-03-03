@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const mongoose = require("mongoose");
 const Course = require("../models/Course");
 const TypeCourse = require("../models/TypeCourse");
 const bcrypt = require("bcryptjs/dist/bcrypt");
@@ -36,31 +37,54 @@ const getTypeCourses = (req, res) => {
     });
 }
 
-const getListCourse = async (req, res) => Course.find().then(async (data) => {
-    const listTeacher = await User.find({ typeUser: 'giao_vien' })
-    const test = await User.findById("61ed9dfdbebab938a0f1355b")
-
-    const response = data.map((item) => {
-        const teacher = listTeacher.find((teacher) => {
-            return teacher._id + "" === item.teacher_id + "";
-        })
-        return { typeCourse: item.typeCourse, image: item.image, _id: item._id, name: item.name, descriptions: item.descriptions, teacher_id: teacher._id, teacher: teacher }
+const getListCourse = async (req, res) => {
+    const listCourse = await Course.find();
+    const listTeacherId = listCourse.map((item) => item.teacher_id);
+    const listTeacher = await User.find({ _id: { $in: listTeacherId } })
+    const response = listCourse.map((item) => {
+        let teacherFind = listTeacher.find((a) => {
+            return a._id + "" === item.teacher_id + "";
+        });
+        return {
+            teacher: teacherFind,
+            typeCourse: item.typeCourse,
+            image: item.image,
+            _id: item._id,
+            name: item.name,
+            teacher_id: item.teacher_id,
+            createAt: item.createAt,
+            descriptions: item.descriptions,
+        };
     })
-    console.log(response[0])
     return res.status(200).json({
         success: true,
         message: "Lay thanh cong danh sach",
         data: response
     })
+}
 
-}).catch((err) => {
-    res.status(500).json({
-        success: false,
-        message: 'Server error. Please try again.',
-        error: err.message,
-    });
-});
+// Course.find().then(async (data) => {
+//     const listTeacher = await User.find({ typeUser: 'giao_vien' })    
+//     const response = data.map((item) => {
+//         const teacher = listTeacher.find((teacher) => {
+//             return teacher._id + "" === item.teacher_id + "";
+//         })
+//         return { typeCourse: item.typeCourse, image: item.image, _id: item._id, name: item.name, descriptions: item.descriptions, teacher_id: teacher._id, teacher: teacher }
+//     })
+//     console.log(response[0])
+//     return res.status(200).json({
+//         success: true,
+//         message: "Lay thanh cong danh sach",
+//         data: response
+//     })
 
+// }).catch((err) => {
+//     res.status(500).json({
+//         success: false,
+//         message: 'Server error. Please try again.',
+//         error: err.message,
+//     });
+// });
 const createCourse = async (req, res) => {
     const newCourse = new Course({
         name: req.body.name,
@@ -133,7 +157,6 @@ const createTypeCourse = (req, res) => {
 }
 
 const createUser = async (req, res) => {
-    console.log("req.body", req.body)
     const userFind = await User.findOne({ email: req.body.email });
     if (userFind) {
         res.status(204).json({
@@ -231,7 +254,6 @@ const AdminUpdateUser = async (req, res) => {
 
 const AdminUpdateCourse = async (req, res) => {
     const result = await Course.updateOne({ _id: req.body._id }, { $set: req.body });
-    console.log("result", result)
     return res.status(200).json({
         message: "Update successfully"
     })
@@ -247,7 +269,6 @@ const getDetailCourse = async (req, res) => {
 
 const getListUserOfType = async (req, res) => {
     const result = await User.find({ typeUser: req.query.typeUser });
-    console.log(result);
     return res.status(200).json({
         data: result,
         success: true
@@ -258,7 +279,6 @@ const addedSchedule = async (req, res) => {
     const course = await Schedule.findOne({ course_id: req.body.course_id });
     course.schedule = req.body.newSchedule;
     await course.save();
-    console.log("course", course);
     return res.status(200).json({
         message: "successfully updated",
         data: course.schedule
